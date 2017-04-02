@@ -2,6 +2,10 @@
   "manifest_version": 2,
   "name": "FakeBlock",
   "version": "0.1",
+  "browser_action": {
+    "default_title": "FakeBlock",
+    "default_popup": "popup.html"
+  },
   "background": {
     "scripts": [
       "background.js"
@@ -14,10 +18,10 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.facebook.com/*",
-        "http://www.facebook.com/*"
+        "*://www.facebook.com/*"
       ],
       "js": [
+        "jquery-3.2.0.js",
         "content.js"
       ]
     }

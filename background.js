@@ -1,3 +1,5 @@
+var contextMenuIsVisible = false;
+
 function profileSubstring(profileUrl) {
   startingIndex = (profileUrl[4] == ':' ? 7 : 8);
   endingIndex = profileUrl.indexOf("?");
@@ -28,18 +30,40 @@ function block(info, tab) {
 }
 
 function loadContextMenu() {
-  chrome.storage.local.clear();
-  chrome.contextMenus.create({
-    title: "FakeBlock %s",
-    contexts: ["link"],
-    onclick: block
+  if (!contextMenuIsVisible) {
+    chrome.contextMenus.create({
+      title: "FakeBlock %s",
+      contexts: ["link"],
+      onclick: block,
+      documentUrlPatterns: [
+        "https://www.facebook.com/*",
+        "http://www.facebook.com/*"
+      ],
+      targetUrlPatterns: [
+        "https://www.facebook.com/*",
+        "http://www.facebook.com/*"
+      ]
+    }, function() {
+      contextMenuIsVisible = true;
+    });
+  }
+}
+
+function removeContextMenu() {
+  chrome.contextMenus.removeAll(function() {
+    contextMenuIsVisible = false;
   });
 }
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.message === "loadContextMenu") {
-      loadContextMenu();
+    switch(request.message) {
+      case "loadContextMenu":
+        loadContextMenu();
+        break;
+      case "removeContextMenu":
+        removeContextMenu();
+        break;
     }
   }
 );
