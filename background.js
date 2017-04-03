@@ -1,8 +1,16 @@
 var contextMenuIsVisible = false;
 
 function profileSubstring(profileUrl) {
-  startingIndex = (profileUrl[4] == ':' ? 7 : 8);
-  endingIndex = profileUrl.indexOf("?");
+  var startingIndex = (profileUrl[4] == ':' ? 7 : 8);
+  var endingIndex;
+
+  if (profileUrl.indexOf("profile.php") !== -1) {
+    endingIndex = profileUrl.indexOf("&");
+  }
+  else {
+    endingIndex = profileUrl.indexOf("?");
+  }
+
   return profileUrl.substring(startingIndex, endingIndex);
 }
 

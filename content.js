@@ -9,10 +9,10 @@ function switchContextMenu(e) {
   var fn;
 
   if (e.target.href != undefined && isValidUrl(e.target.href)) {
-    fn = chrome.runtime.sendMessage({ message : "loadContextMenu" });
+    fn = chrome.runtime.sendMessage({ message : "loadContextMenu" }, function() {});
   }
   else {
-    fn = chrome.runtime.sendMessage({ message : "removeContextMenu" });
+    fn = chrome.runtime.sendMessage({ message : "removeContextMenu" }, function() {});
   }
 
   $.when(fn).done(function() {

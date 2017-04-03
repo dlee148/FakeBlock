@@ -2,9 +2,9 @@
   "manifest_version": 2,
   "name": "FakeBlock",
   "version": "0.1",
-  "icons": { "16": "img/faceblock16.png",
-           "48": "img/faceblock48.png",
-          "128": "img/faceblock128.png" },
+  "icons": { "16": "img/fakeblock16.png",
+           "48": "img/fakeblock48.png",
+          "128": "img/fakeblock128.png" },
   "browser_action": {
     "default_title": "FakeBlock",
     "default_popup": "popup.html"
