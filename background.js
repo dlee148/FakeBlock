@@ -24,7 +24,7 @@ function block(info, tab) {
       });
     }
     else {
-      alert("User " + info.selectionText + " already FakeBlocked.");
+      alert(info.selectionText + " has already been FakeBlocked.");
     }
   });
 }
