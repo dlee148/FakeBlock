@@ -35,6 +35,11 @@ removeBlockedPosts();
 
 // Event delegation
 $(document).on('mouseover', 'a', switchContextMenu);
+
 window.addEventListener("scroll", function() {
+  removeBlockedPosts();
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   removeBlockedPosts();
 });

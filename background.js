@@ -35,6 +35,11 @@ function block(info, tab) {
       alert(info.selectionText + " has already been FakeBlocked.");
     }
   });
+
+  // send message to content to run remove fn
+  chrome.tabs.query({ active : true, highlighted : true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { message : "block" });
+  });
 }
 
 function loadContextMenu() {
