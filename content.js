@@ -21,11 +21,20 @@ function removeBlockedPosts() {
   chrome.storage.local.get(null, function(result) {
     for (var key in result) {
       if (key !== "numBlocked") {
-        var matches = document.querySelectorAll("a[href*='" + key + "'].profileLink");
-        for (var i = 0; i < matches.length; i++) {
-          while (matches[i].classList[0] !== "fbUserContent") matches[i] = matches[i].parentElement;
-          matches[i].parentElement.removeChild(x);
-        }
+        var queryString = "a[href*='" + key + "']";
+        var matches = document.querySelectorAll(queryString);
+
+        [].forEach.call(matches, function(el) {
+          while (el.classList[0] !== "fbUserContent") {
+            el = el.parentElement;
+            if (el == null) return;
+          }
+
+          // covers redundancy
+          if (el.parentElement != null) {
+            el.parentElement.removeChild(el);
+          }
+        });
       }
     }
   });
@@ -35,10 +44,6 @@ removeBlockedPosts();
 
 // Event delegation
 $(document).on('mouseover', 'a', switchContextMenu);
-
-window.addEventListener("scroll", function() {
-  removeBlockedPosts();
-});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   removeBlockedPosts();
