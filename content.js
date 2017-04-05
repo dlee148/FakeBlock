@@ -40,11 +40,30 @@ function removeBlockedPosts() {
   });
 }
 
+// Remove initial bad posts
 removeBlockedPosts();
 
 // Event delegation
 $(document).on('mouseover', 'a', switchContextMenu);
 
+// Remove bad posts when a new user is blocked
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   removeBlockedPosts();
 });
+
+// DOM mutation observation -- when more posts load
+var target = document.getElementsByTagName("body");
+
+var observer = new MutationObserver(function(mutations) {
+  removeBlockedPosts();
+});
+
+var config = { attributes: true, childList: true, characterData: true };
+
+observer.observe(target[0], config);
+
+// Delete observer before navigating away
+window.onbeforeunload = function() {
+  observer.disconnect();
+  delete observer;
+}
