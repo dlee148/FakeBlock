@@ -31,7 +31,8 @@ function removeBlockedPosts() {
           }
 
           // covers redundancy
-          if (el.parentElement != null) {
+          if (el.parentElement != null && el.parentElement.parentElement != null) {
+            el = el.parentElement;
             el.parentElement.removeChild(el);
           }
         });
