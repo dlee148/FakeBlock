@@ -1,4 +1,11 @@
 function isValidUrl(url) {
+  // special cases
+  var urlSpecial = url.split('/');
+  if (urlSpecial.length == 4 && urlSpecial[3] == "#") return false;
+  if (urlSpecial.length == 4 && urlSpecial[3][0] == '?') return false;
+  if (urlSpecial.length == 4 && urlSpecial[3].startsWith("settings")) return false;
+
+  // general case
   return ((url.match(/\//g) || []).length == 3);
 }
 
