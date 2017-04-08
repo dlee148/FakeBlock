@@ -25,6 +25,8 @@ function unBlock(id) {
       emptyList();
     }
   });
+
+  chrome.extension.sendMessage({ message : "unblock", key : id });
 }
 
 function populateList(blockees) {

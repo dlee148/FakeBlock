@@ -77,6 +77,11 @@ chrome.runtime.onMessage.addListener(
       case "removeContextMenu":
         removeContextMenu();
         break;
+      case "unblock":
+        chrome.tabs.query({ active : true, highlighted : true}, function(tabs) {
+          chrome.tabs.sendMessage(tabs[0].id, { message : "unblock", key : request.key });
+        });
+        break;
     }
   }
 );

@@ -1,3 +1,13 @@
+var blockedPosts = {};
+
+function contains(arr, value) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == value) return true;
+  }
+
+  return false;
+}
+
 function isValidUrl(url) {
   // special cases
   var urlSpecial = url.split('/');
@@ -28,11 +38,12 @@ function removeBlockedPosts() {
   chrome.storage.local.get(null, function(result) {
     for (var key in result) {
       if (key !== "numBlocked") {
+        blockedPosts[key] = [];
         var queryString = "a[href*='" + key + "']";
         var matches = document.querySelectorAll(queryString);
 
         [].forEach.call(matches, function(el) {
-          while (el.classList[0] !== "fbUserContent") {
+          while (!contains(el.classList, "fbUserContent") && !contains(el.classList, "UFIComment")) {
             el = el.parentElement;
             if (el == null) return;
           }
@@ -40,12 +51,21 @@ function removeBlockedPosts() {
           // covers redundancy
           if (el.parentElement != null && el.parentElement.parentElement != null) {
             el = el.parentElement;
-            el.parentElement.removeChild(el);
+            el.parentElement.style.display = "none";
+            blockedPosts[key].push(el.parentElement);
           }
         });
       }
     }
   });
+}
+
+function unblockPosts(id) {
+  for (var i = 0; i < blockedPosts[id].length; i++) {
+    blockedPosts[id][i].removeAttribute("style");
+  }
+
+  delete blockedPosts[id];
 }
 
 // Remove initial bad posts
@@ -56,7 +76,8 @@ $(document).on('mouseover', 'a', switchContextMenu);
 
 // Remove bad posts when a new user is blocked
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  removeBlockedPosts();
+  if (request.message == "block") removeBlockedPosts();
+  if (request.message == "unblock") unblockPosts(request.key);
 });
 
 // DOM mutation observation -- when more posts load
