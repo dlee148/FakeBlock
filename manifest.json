@@ -5,7 +5,7 @@
   "icons": { "16": "img/fakeblock16.png",
            "48": "img/fakeblock48.png",
           "128": "img/fakeblock128.png" },
-  "browser_action": {
+  "page_action": {
     "default_title": "FakeBlock",
     "default_popup": "popup.html"
   },
@@ -16,12 +16,14 @@
   },
   "permissions": [
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "tabs"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://www.facebook.com/*"
+        "*://www.facebook.com/*",
+        "*://twitter.com/*"
       ],
       "js": [
         "js/jquery-3.2.0.js",

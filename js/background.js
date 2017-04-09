@@ -50,11 +50,15 @@ function loadContextMenu() {
       onclick: block,
       documentUrlPatterns: [
         "https://www.facebook.com/*",
-        "http://www.facebook.com/*"
+        "http://www.facebook.com/*",
+        "http://twitter.com/*",
+        "https://twitter.com/*"
       ],
       targetUrlPatterns: [
         "https://www.facebook.com/*",
-        "http://www.facebook.com/*"
+        "http://www.facebook.com/*",
+        "http://twitter.com/*",
+        "https://twitter.com/*"
       ]
     }, function() {
       contextMenuIsVisible = true;
@@ -67,6 +71,15 @@ function removeContextMenu() {
     contextMenuIsVisible = false;
   });
 }
+
+function togglePageAction(tabId, changeInfo, tab) {
+  console.log(tab);
+  console.log(tabId);
+  console.log(changeInfo);
+  if (tab.url.indexOf('facebook.com') != -1 || tab.url.indexOf('twitter.com') != -1) {
+    chrome.pageAction.show(tabId);
+  }
+};
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -85,3 +98,5 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+chrome.tabs.onUpdated.addListener(togglePageAction);

@@ -1,3 +1,7 @@
+const FACEBOOK = 0;
+const TWITTER  = 1;
+const SITE     = (window.location.href.indexOf('facebook.com') == -1) ? TWITTER : FACEBOOK;
+
 var blockedPosts = {};
 
 function contains(arr, value) {
@@ -11,9 +15,12 @@ function contains(arr, value) {
 function isValidUrl(url) {
   // special cases
   var urlSpecial = url.split('/');
-  if (urlSpecial.length == 4 && urlSpecial[3] == "#") return false;
-  if (urlSpecial.length == 4 && urlSpecial[3][0] == '?') return false;
-  if (urlSpecial.length == 4 && urlSpecial[3].startsWith("settings")) return false;
+
+  if (SITE == FACEBOOK) {
+    if (urlSpecial.length == 4 && urlSpecial[3] == "#") return false;
+    if (urlSpecial.length == 4 && urlSpecial[3][0] == '?') return false;
+    if (urlSpecial.length == 4 && urlSpecial[3].startsWith("settings")) return false;
+  }
 
   // general case
   return ((url.match(/\//g) || []).length == 3);
@@ -43,16 +50,22 @@ function removeBlockedPosts() {
         var matches = document.querySelectorAll(queryString);
 
         [].forEach.call(matches, function(el) {
-          while (!contains(el.classList, "fbUserContent") && !contains(el.classList, "UFIComment")) {
+          while (!contains(el.classList, SITE == FACEBOOK ? "fbUserContent" : "stream-item") && !contains(el.classList, "UFIComment")) {
             el = el.parentElement;
             if (el == null) return;
           }
 
           // covers redundancy
           if (el.parentElement != null && el.parentElement.parentElement != null) {
-            el = el.parentElement;
-            el.parentElement.style.display = "none";
-            blockedPosts[key].push(el.parentElement);
+            if (SITE == FACEBOOK) {
+              el = el.parentElement;
+              el.parentElement.style.display = "none";
+              blockedPosts[key].push(el.parentElement);
+            }
+            else {
+              el.style.display = "none";
+              blockedPosts[key].push(el);
+            }
           }
         });
       }
